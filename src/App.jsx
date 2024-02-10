@@ -3,6 +3,8 @@ import './App.css';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Registration from './pages/Registration';
+import CategoriesPage from './pages/Categories';
+import CartPage from './pages/Cart';
 
 function App() {
   return (
@@ -11,6 +13,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registration" element={<Registration />} />
+        <Route path="/categories" element={<CategoriesPage />} />
+        <Route path="/cart" element={<CartPage />} />
       </Routes>
     </Router>
   );
