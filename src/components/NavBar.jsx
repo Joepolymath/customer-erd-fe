@@ -6,7 +6,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           <Link to="/" className="text-white text-lg font-semibold">
-            ERD
+            CRM-Project
           </Link>
           <ul className="flex space-x-4">
             <li>
