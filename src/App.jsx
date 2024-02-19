@@ -5,6 +5,8 @@ import Login from './pages/Login';
 import Registration from './pages/Registration';
 import CategoriesPage from './pages/Categories';
 import CartPage from './pages/Cart';
+import Orders from './pages/Orders';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         <Route path="/registration" element={<Registration />} />
         <Route path="/categories" element={<CategoriesPage />} />
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/profile" element={<Profile />} />
       </Routes>
     </Router>
   );

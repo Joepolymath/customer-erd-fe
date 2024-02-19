@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ const Login = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to ERD
+            Sign In
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
@@ -90,6 +91,18 @@ const Login = () => {
             </button>
           </div>
         </form>
+
+        <div className="text-center text-sm">
+          <p>
+            Don&apos;t have an account?{' '}
+            <Link
+              to={'/registration'}
+              className="font-medium text-indigo-600 hover:text-indigo-500"
+            >
+              Sign up here
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

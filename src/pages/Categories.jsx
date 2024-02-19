@@ -15,6 +15,7 @@ const CategoriesPage = () => {
         setCategories(data);
         setIsLoading(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
