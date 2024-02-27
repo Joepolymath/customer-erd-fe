@@ -1,14 +1,50 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ThreeDots } from 'react-loader-spinner';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = (e) => {
     e.preventDefault();
+    setLoading(true);
     // Add your login logic here
     console.log('Logging in with:', email, password);
+
+    const myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+
+    const raw = JSON.stringify({
+      email,
+      password,
+    });
+
+    const requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow',
+    };
+
+    fetch('https://custerd.onrender.com/api/token/', requestOptions)
+      .then((response) => {
+        setLoading(false);
+        const data = response.json();
+        console.log({ Data: data });
+        return data;
+      })
+      .then((result) => {
+        console.log(result);
+        toast(result.detail);
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log('THIS IS AN ERROR', error);
+        return console.error(error);
+      });
   };
 
   return (
@@ -83,12 +119,25 @@ const Login = () => {
           </div>
 
           <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Sign in
-            </button>
+            {loading ? (
+              <ThreeDots
+                visible={true}
+                height="80"
+                width="80"
+                color="#4F46E5"
+                radius="9"
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+              />
+            ) : (
+              <button
+                type="submit"
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Sign in
+              </button>
+            )}
           </div>
         </form>
 

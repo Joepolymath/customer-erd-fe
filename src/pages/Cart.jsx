@@ -1,8 +1,10 @@
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/NavBar';
 
 const CartPage = () => {
   const cartsState = useSelector((state) => state.carts);
+  const navigate = useNavigate();
   // Sample cart data
 
   return (
@@ -62,7 +64,10 @@ const CartPage = () => {
             </table>
           </div>
           <div className="flex justify-end mt-4">
-            <button className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300">
+            <button
+              className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300"
+              onClick={() => navigate('/checkout')}
+            >
               Checkout
             </button>
           </div>

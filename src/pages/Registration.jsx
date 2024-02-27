@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ThreeDots } from 'react-loader-spinner';
 
 const Registration = () => {
   const [email, setEmail] = useState('');
@@ -8,9 +9,12 @@ const Registration = () => {
   const [password, setPassword] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSignUp = (e) => {
     e.preventDefault();
+    setLoading(true);
     console.log({
       email,
       firstName,
@@ -18,14 +22,42 @@ const Registration = () => {
       password,
       address,
       phone,
+      profilePicture,
     });
+
+    const formdata = new FormData();
+    formdata.append('email', email);
+    formdata.append('first_name', firstName);
+    formdata.append('last_name', lastName);
+    formdata.append('address', address);
+    formdata.append('phone_number', phone);
+    formdata.append('password', password);
+    formdata.append('profile_image', profilePicture);
+
+    const requestOptions = {
+      method: 'POST',
+      body: formdata,
+      redirect: 'follow',
+    };
+
+    fetch('https://custerd.onrender.com/user/registration/', requestOptions)
+      .then((response) => {
+        setLoading(false);
+        return response.text();
+      })
+      .then((result) => console.log(result))
+      .catch((error) => {
+        setLoading(false);
+        console.error(error);
+      });
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign Up to ERD
+            Sign Up
           </h2>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSignUp}>
@@ -59,7 +91,7 @@ const Registration = () => {
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Last Name"
-                value={email}
+                value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
               />
             </div>
@@ -127,15 +159,43 @@ const Registration = () => {
                 onChange={(e) => setAddress(e.target.value)}
               />
             </div>
+
+            {/* Profile Picture */}
+            <div className="py-4">
+              <label htmlFor="profilePicture" className="sr-only">
+                Profile Picture
+              </label>
+              <input
+                id="profilePicture"
+                name="profilePicture"
+                type="file"
+                accept="image/*"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                onChange={(e) => setProfilePicture(e.target.files[0])}
+              />
+            </div>
           </div>
 
           <div>
-            <button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            >
-              Register
-            </button>
+            {loading ? (
+              <ThreeDots
+                visible={true}
+                height="80"
+                width="80"
+                color="#4F46E5"
+                radius="9"
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+              />
+            ) : (
+              <button
+                type="submit"
+                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
+                Register
+              </button>
+            )}
           </div>
         </form>
 

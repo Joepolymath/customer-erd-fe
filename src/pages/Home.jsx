@@ -24,7 +24,7 @@ const Home = () => {
 
   const handleAddToCart = (cartData) => {
     dispatch(addToCart(cartData));
-    toast('Item Added to Cart Successfully');
+    toast('Item Added to Cart Successfully', { position: 'top-center' });
   };
 
   return (
