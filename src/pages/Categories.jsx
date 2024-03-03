@@ -9,11 +9,13 @@ const CategoriesPage = () => {
 
   useEffect(() => {
     console.log(categories, isLoading);
-    fetch('https://fakestoreapi.com/products/categories')
+    fetch('https://crm-backend-plau.onrender.com/categories')
       .then((res) => res.json())
       .then((data) => {
-        setCategories(data);
-        setIsLoading(false);
+        if (data.status === 'success') {
+          setCategories(data.data);
+          setIsLoading(false);
+        }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -32,7 +34,7 @@ const CategoriesPage = () => {
               className="bg-white shadow-sm rounded-md overflow-hidden"
             >
               <div className="p-4">
-                <h3 className="text-xl font-semibold mb-2">{category}</h3>
+                <h3 className="text-xl font-semibold mb-2">{category.name}</h3>
                 <p className="text-gray-700 mb-2">
                   {Math.floor(Math.random() * 100) + 1} Products
                 </p>
