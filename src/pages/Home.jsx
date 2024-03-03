@@ -13,11 +13,13 @@ const Home = () => {
 
   useEffect(() => {
     console.log(items, isLoading);
-    fetch('https://fakestoreapi.com/products')
+    fetch('https://crm-backend-plau.onrender.com/products')
       .then((res) => res.json())
       .then((data) => {
-        setItems(data);
-        setIsLoading(false);
+        if (data.status === 'success') {
+          setItems(data.data);
+          setIsLoading(false);
+        }
       });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -34,7 +36,7 @@ const Home = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
           {items.map((product) => (
             <div
-              key={product.id}
+              key={product._id}
               className="bg-white shadow-sm rounded-md overflow-hidden w-64 relative"
             >
               <img
@@ -49,7 +51,7 @@ const Home = () => {
                   className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300 absolute bottom-4 left-2"
                   onClick={() => {
                     handleAddToCart({
-                      id: product.id,
+                      id: product._id,
                       image: product.image,
                       title: product.title,
                       price: product.price,
