@@ -1,12 +1,16 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ThreeDots } from 'react-loader-spinner';
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { login } from '../features/auth/authSlice';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -29,16 +33,21 @@ const Login = () => {
       redirect: 'follow',
     };
 
-    fetch('https://custerd.onrender.com/api/token/', requestOptions)
+    fetch('https://crm-backend-plau.onrender.com/users/login/', requestOptions)
       .then((response) => {
         setLoading(false);
         const data = response.json();
-        console.log({ Data: data });
         return data;
       })
       .then((result) => {
         console.log(result);
-        toast(result.detail);
+        if (result.status === 'success') {
+          toast('Login Successful');
+          dispatch(login(result.data));
+          navigate('/');
+        } else {
+          toast(result.message);
+        }
       })
       .catch((error) => {
         setLoading(false);

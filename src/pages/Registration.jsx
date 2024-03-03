@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ThreeDots } from 'react-loader-spinner';
+import { toast } from 'react-toastify';
 
 const Registration = () => {
   const [email, setEmail] = useState('');
@@ -9,8 +10,9 @@ const Registration = () => {
   const [password, setPassword] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
-  const [profilePicture, setProfilePicture] = useState(null);
+  // const [profilePicture, setProfilePicture] = useState(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSignUp = (e) => {
     e.preventDefault();
@@ -22,33 +24,43 @@ const Registration = () => {
       password,
       address,
       phone,
-      profilePicture,
+      // profilePicture,
     });
-
-    const formdata = new FormData();
-    formdata.append('email', email);
-    formdata.append('first_name', firstName);
-    formdata.append('last_name', lastName);
-    formdata.append('address', address);
-    formdata.append('phone_number', phone);
-    formdata.append('password', password);
-    formdata.append('profile_image', profilePicture);
+    const myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+    const payload = JSON.stringify({
+      email,
+      firstName,
+      lastName,
+      password,
+      address,
+      phone,
+    });
 
     const requestOptions = {
       method: 'POST',
-      body: formdata,
+      headers: myHeaders,
+      body: payload,
       redirect: 'follow',
     };
 
-    fetch('https://custerd.onrender.com/user/registration/', requestOptions)
+    fetch('https://crm-backend-plau.onrender.com/users', requestOptions)
       .then((response) => {
         setLoading(false);
-        return response.text();
+        return response.json();
       })
-      .then((result) => console.log(result))
+      .then((result) => {
+        console.log({ result });
+        if (result.status === 'success') {
+          toast(result.message);
+          navigate('/login');
+        } else {
+          toast(result.message);
+        }
+      })
       .catch((error) => {
         setLoading(false);
-        console.error(error);
+        console.error({ error });
       });
   };
 
@@ -161,7 +173,7 @@ const Registration = () => {
             </div>
 
             {/* Profile Picture */}
-            <div className="py-4">
+            {/* <div className="py-4">
               <label htmlFor="profilePicture" className="sr-only">
                 Profile Picture
               </label>
@@ -173,7 +185,7 @@ const Registration = () => {
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 onChange={(e) => setProfilePicture(e.target.files[0])}
               />
-            </div>
+            </div> */}
           </div>
 
           <div>
