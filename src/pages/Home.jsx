@@ -1,15 +1,18 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import { addToCart } from '../features/carts/cartsSlice';
 
 import Navbar from '../components/NavBar';
 
 const Home = () => {
+  const authState = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log(items, isLoading);
@@ -25,6 +28,11 @@ const Home = () => {
   }, []);
 
   const handleAddToCart = (cartData) => {
+    if (!authState.isAuthenticated) {
+      toast('Login is mandatory');
+      navigate('/login');
+      return;
+    }
     dispatch(addToCart(cartData));
     toast('Item Added to Cart Successfully', { position: 'top-center' });
   };

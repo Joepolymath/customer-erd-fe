@@ -1,6 +1,8 @@
+import { useSelector } from 'react-redux';
 import Navbar from '../components/NavBar';
 
 const Profile = () => {
+  const authState = useSelector((state) => state.auth);
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -15,10 +17,10 @@ const Profile = () => {
               />
               <div>
                 <h1 className="text-3xl font-semibold text-gray-900">
-                  Joshua Ajagbe
+                  {authState.userData.firstName} {authState.userData.lastName}
                 </h1>
                 <p className="text-lg text-gray-500">
-                  joshuaajagbe96@gmail.com
+                  {authState.userData.email}
                 </p>
               </div>
             </div>
@@ -30,7 +32,7 @@ const Profile = () => {
                 Address
               </label>
               <p className="text-lg text-gray-900" id="address">
-                123 Main St, Bristol, United Kingdom, Zip Code: 980234
+                {authState.userData.address}
               </p>
             </div>
             <div className="mb-4">
@@ -41,7 +43,7 @@ const Profile = () => {
                 Phone Number
               </label>
               <p className="text-lg text-gray-900" id="phone">
-                +447123456789
+                {authState.userData.phone}
               </p>
             </div>
             <div className="mb-4">

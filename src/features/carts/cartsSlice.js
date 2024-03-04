@@ -15,8 +15,17 @@ export const cartsSlice = createSlice({
     },
 
     addToCart: (state, action) => {
-      console.log({ newState: action.payload });
-      state.carts.push(action.payload);
+      let id;
+      const foundState = state.carts.filter((cart, idx) => {
+        id = idx;
+        return cart.id === action.payload.id;
+      });
+      if (foundState.length > 0) {
+        state.carts[id].quantity += 1;
+      } else {
+        state.carts.push({ ...action.payload, quantity: 1 });
+      }
+
       state.length += 1;
       state.total += action.payload.price;
     },

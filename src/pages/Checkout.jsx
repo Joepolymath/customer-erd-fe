@@ -3,13 +3,16 @@ import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/NavBar';
+import { ThreeDots } from 'react-loader-spinner';
 
 const Checkout = () => {
   const navigate = useNavigate();
   const [voucherCode, setVoucherCode] = useState('');
   const cartsState = useSelector((state) => state.carts);
+  const authState = useSelector((state) => state.auth);
   const [totalAmount, setTotalAmount] = useState(cartsState.total); // Initial total amount
   const [voucherApplied, setVoucherApplied] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const applyVoucher = () => {
     // Simulating voucher validation and discount
@@ -25,6 +28,51 @@ const Checkout = () => {
         position: 'top-center',
       });
     }
+  };
+
+  const handleCheckout = () => {
+    setLoading(true);
+    const payload = [];
+    for (let cart of cartsState.carts) {
+      const item = {
+        price: cart.price,
+        quantity: cart.quantity,
+        product: cart.id,
+        buyer: authState.userData._id,
+      };
+      payload.push(item);
+    }
+
+    const myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+
+    const requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: JSON.stringify(payload),
+      redirect: 'follow',
+    };
+
+    fetch('https://crm-backend-plau.onrender.com/orders', requestOptions)
+      .then((response) => {
+        setLoading(false);
+        const data = response.json();
+        return data;
+      })
+      .then((result) => {
+        console.log(result);
+        if (result.status === 'success') {
+          toast('Payment Successful');
+          navigate('/rating');
+        } else {
+          toast(result.message);
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log('THIS IS AN ERROR', error);
+        return console.error(error);
+      });
   };
 
   return (
@@ -62,15 +110,25 @@ const Checkout = () => {
               </p>
             </div>
             <div className="mt-6">
-              <button
-                className="w-full inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                onClick={() => {
-                  toast('Payment Successful');
-                  navigate('/rating');
-                }}
-              >
-                Proceed to Payment
-              </button>
+              {loading ? (
+                <ThreeDots
+                  visible={true}
+                  height="80"
+                  width="80"
+                  color="#4F46E5"
+                  radius="9"
+                  ariaLabel="three-dots-loading"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                />
+              ) : (
+                <button
+                  className="w-full inline-block bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  onClick={handleCheckout}
+                >
+                  Proceed to Payment
+                </button>
+              )}
             </div>
           </div>
         </div>

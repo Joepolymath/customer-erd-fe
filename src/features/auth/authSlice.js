@@ -7,7 +7,7 @@ const initialState = {
 };
 
 export const authSlice = createSlice({
-  name: 'carts',
+  name: 'auth',
   initialState,
   reducers: {
     logout: () => {

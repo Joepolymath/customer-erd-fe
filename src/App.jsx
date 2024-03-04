@@ -9,20 +9,23 @@ import Orders from './pages/Orders';
 import Profile from './pages/Profile';
 import CustomerRatingPage from './pages/Rating';
 import Checkout from './pages/Checkout';
+import PrivateRoutes from './components/PrivateRoutes';
 
 function App() {
   return (
     <Router>
       <Routes>
+        <Route element={<PrivateRoutes />}>
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/rating" element={<CustomerRatingPage />} />
+        </Route>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registration" element={<Registration />} />
         <Route path="/categories" element={<CategoriesPage />} />
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/orders" element={<Orders />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/rating" element={<CustomerRatingPage />} />
-        <Route path="/checkout" element={<Checkout />} />
       </Routes>
     </Router>
   );
