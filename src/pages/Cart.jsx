@@ -1,12 +1,14 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { MdDelete } from 'react-icons/md';
 import { Tooltip as ReactTooltip } from 'react-tooltip';
 import Navbar from '../components/NavBar';
+import { removeFromCart } from '../features/carts/cartsSlice';
 
 const CartPage = () => {
   const cartsState = useSelector((state) => state.carts);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   // Sample cart data
 
   return (
@@ -75,11 +77,11 @@ const CartPage = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       {item.quantity}
                     </td>
-                    <td
-                      className="px-6 py-4 whitespace-nowrap cursor-pointer "
-                      data-tooltip-id="remove-cart"
-                    >
-                      <MdDelete />
+                    <td className="px-6 py-4 whitespace-nowrap cursor-pointer ">
+                      <MdDelete
+                        data-tooltip-id="remove-cart"
+                        onClick={() => dispatch(removeFromCart(item.id))}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -100,7 +102,11 @@ const CartPage = () => {
           <h3>Your Cart is Empty</h3>
         </div>
       )}
-      <ReactTooltip id="remove-cart" place="top" content="Remove from Cart" />
+      <ReactTooltip
+        id="remove-cart"
+        place="bottom"
+        content="Remove from Cart"
+      />
     </div>
   );
 };
