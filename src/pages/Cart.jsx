@@ -1,5 +1,7 @@
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { MdDelete } from 'react-icons/md';
+import { Tooltip as ReactTooltip } from 'react-tooltip';
 import Navbar from '../components/NavBar';
 
 const CartPage = () => {
@@ -49,6 +51,12 @@ const CartPage = () => {
                   >
                     Quantity
                   </th>
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    {' '}
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -66,6 +74,12 @@ const CartPage = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       {item.quantity}
+                    </td>
+                    <td
+                      className="px-6 py-4 whitespace-nowrap cursor-pointer "
+                      data-tooltip-id="remove-cart"
+                    >
+                      <MdDelete />
                     </td>
                   </tr>
                 ))}
@@ -86,6 +100,7 @@ const CartPage = () => {
           <h3>Your Cart is Empty</h3>
         </div>
       )}
+      <ReactTooltip id="remove-cart" place="top" content="Remove from Cart" />
     </div>
   );
 };
