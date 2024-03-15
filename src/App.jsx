@@ -10,6 +10,7 @@ import Profile from './pages/Profile';
 import CustomerRatingPage from './pages/Rating';
 import Checkout from './pages/Checkout';
 import PrivateRoutes from './components/PrivateRoutes';
+import ViewAllReviewsPage from './pages/ViewRatings';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/rating" element={<CustomerRatingPage />} />
         </Route>
+        <Route path="/view-ratings" element={<ViewAllReviewsPage />} />
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registration" element={<Registration />} />

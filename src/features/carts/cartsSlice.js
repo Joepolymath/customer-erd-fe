@@ -31,6 +31,10 @@ export const cartsSlice = createSlice({
     },
 
     removeFromCart: (state, action) => {
+      const prevState = state.carts.filter(
+        (cart) => cart.id === action.payload
+      );
+      console.log({ prevState });
       const newState = state.carts.filter((cart) => cart.id !== action.payload);
       state.carts = newState;
       state.length -= 1;
