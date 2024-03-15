@@ -71,7 +71,7 @@ const ViewAllReviewsPage = () => {
                 {/* Add date if available */}
               </div>
               <p className="mb-4">{review.content}</p>
-              <p className="italic text-gray-600">{review.comment}</p>
+              {/* <p className="italic text-gray-600">{review.comment}</p> */}
             </div>
           ))}
         </div>

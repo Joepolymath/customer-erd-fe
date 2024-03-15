@@ -1,15 +1,69 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Confetti from 'react-confetti';
-
+import { useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import Navbar from '../components/NavBar';
+import { ThreeDots } from 'react-loader-spinner';
 
 const CustomerRatingPage = () => {
+  const authState = useSelector((state) => state.auth);
   const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState('');
   const [isRated, setIsRated] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleRatingChange = (value) => {
     setRating(value);
   };
+
+  const handleCommentChange = (event) => {
+    setComment(event.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
+
+    const raw = JSON.stringify({
+      user: authState.userData._id,
+      comment,
+      rating,
+    });
+
+    const requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow',
+    };
+
+    fetch('https://crm-backend-plau.onrender.com/reviews', requestOptions)
+      .then((response) => {
+        setLoading(false);
+        const data = response.json();
+        return data;
+      })
+      .then((result) => {
+        console.log(result);
+        if (result.status === 'success') {
+          //  toast('Login Successful');
+          setIsRated(true);
+        } else {
+          toast(result.message);
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log('THIS IS AN ERROR', error);
+        return console.error(error);
+      });
+  };
+
+  useEffect(() => {
+    console.log({ user: authState.userData });
+  });
 
   return (
     <div>
@@ -52,19 +106,36 @@ const CustomerRatingPage = () => {
                 ))}
               </div>
             </div>
-            <p className="text-gray-600 text-center mb-6">
+            <p className="text-gray-600 text-center mb-4">
               {rating === 0
                 ? 'Please rate our service'
                 : `You rated us ${rating} stars. Thank you!`}
             </p>
-            <button
-              className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-              onClick={() => {
-                setIsRated(true);
-              }}
-            >
-              Submit Rating
-            </button>
+            <textarea
+              className="w-full h-24 px-3 py-2 mb-4 border rounded-md focus:outline-none focus:border-blue-500"
+              placeholder="Leave a comment..."
+              value={comment}
+              onChange={handleCommentChange}
+            ></textarea>
+            {loading ? (
+              <ThreeDots
+                visible={true}
+                height="80"
+                width="80"
+                color="#4F46E5"
+                radius="9"
+                ariaLabel="three-dots-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+              />
+            ) : (
+              <button
+                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
+                onClick={handleSubmit}
+              >
+                Submit Rating
+              </button>
+            )}
           </div>
         )}
       </div>
