@@ -6,48 +6,30 @@ const ViewAllReviewsPage = () => {
 
   useEffect(() => {
     fetchReviews();
+    console.log({ reviews });
   }, []);
 
   const fetchReviews = async () => {
-    const mockReviews = [
-      {
-        id: 1,
-        userName: 'John Doe',
-        rating: 5,
-        content: 'Great service, highly recommended!',
-        comment: 'I loved the fast delivery!',
-      },
-      {
-        id: 2,
-        userName: 'Jane Smith',
-        rating: 4,
-        content: 'Good experience overall.',
-        comment: 'The customer support was helpful.',
-      },
-      {
-        id: 3,
-        userName: 'Alice Johnson',
-        rating: 3,
-        content: 'Average service, could be improved.',
-        comment: 'The product quality was okay.',
-      },
-      {
-        id: 4,
-        userName: 'Bob Brown',
-        rating: 2,
-        content: 'Disappointed with the service.',
-        comment: 'Delivery took longer than expected.',
-      },
-      {
-        id: 5,
-        userName: 'Eva White',
-        rating: 1,
-        content: 'Terrible experience, would not use again.',
-        comment: 'Product arrived damaged.',
-      },
-    ];
+    const myHeaders = new Headers();
+    myHeaders.append('Content-Type', 'application/json');
 
-    setReviews(mockReviews);
+    fetch('https://crm-backend-plau.onrender.com/reviews')
+      .then((response) => {
+        const data = response.json();
+        return data;
+      })
+      .then((result) => {
+        if (result.status === 'success') {
+          console.log({ successful: result });
+          setReviews(result.data);
+        } else {
+          console.log({ Error: result });
+        }
+      })
+      .catch((error) => {
+        console.log('THIS IS AN ERROR', error);
+        return console.error(error);
+      });
   };
 
   return (
@@ -57,21 +39,19 @@ const ViewAllReviewsPage = () => {
         <h1 className="text-3xl font-semibold mb-4">All Reviews</h1>
         <div className="grid grid-cols-1 gap-4">
           {reviews.map((review) => (
-            <div key={review.id} className="bg-white shadow-md rounded-lg p-6">
+            <div key={review._id} className="bg-white shadow-md rounded-lg p-6">
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center">
                   <h3 className="text-lg font-semibold mr-2">
-                    {review.userName}
+                    {review.user.firstName + ' ' + review.user.lastName}
                   </h3>
                   <span className="text-gray-500">
                     rated {review.rating} stars
                   </span>
                 </div>
                 <span className="text-gray-500">{review.date}</span>{' '}
-                {/* Add date if available */}
               </div>
-              <p className="mb-4">{review.content}</p>
-              {/* <p className="italic text-gray-600">{review.comment}</p> */}
+              <p className="mb-4">{review.comment}</p>
             </div>
           ))}
         </div>

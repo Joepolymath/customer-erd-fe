@@ -69,6 +69,11 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
+            <Link to="/view-ratings" className="text-white hover:text-gray-200">
+              Reviews
+            </Link>
+          </li>
+          <li>
             <Link
               to="/profile"
               className="text-white hover:text-gray-200 "
